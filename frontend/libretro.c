@@ -1381,17 +1381,25 @@ static bool find_any_bios(const char *dirpath, char *path, size_t path_size)
 	bool ret = false;
 
 	dir = opendir(dirpath);
+    SysPrintf("CHRIS attempting dir: %s\n", dirpath);
 	if (dir == NULL)
+    {
+        SysPrintf("CHRIS failed dir: %s\n", dirpath);
 		return false;
+    }
 
 	while ((ent = readdir(dir))) {
 		if (strncasecmp(ent->d_name, "scph", 4) != 0)
 			continue;
 
 		snprintf(path, path_size, "%s/%s", dirpath, ent->d_name);
+        SysPrintf("CHRIS attempting bios: %s\n", path);
 		ret = try_use_bios(path);
 		if (ret)
+        {
+            SysPrintf("CHRIS failed bios: %s\n", path);
 			break;
+        }
 	}
 	closedir(dir);
 	return ret;
